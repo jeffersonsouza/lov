@@ -1,0 +1,12 @@
+version: '2'
+services:
+    site:
+        image: jeffersonsouza/php:8-nginx
+        restart: always
+        ports:
+            - '80:80'
+        volumes:
+            - $PWD/config/nginx/http.d/variables.conf:/etc/nginx/http.d/variables.conf
+            - $PWD/config/php/php-fpm.conf:/etc/php8/php-fpm.d/custom.conf
+            - $PWD/config/php/dev.ini:/etc/php8/conf.d/dev.ini
+            - $PWD:/var/www/html
