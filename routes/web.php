@@ -13,6 +13,6 @@
 |
 */
 
-$router->post('/api/', [
+$router->post('/', [
     'as' => 'generator', 'uses' => 'GeneratorController@livingOurValues',
 ]);

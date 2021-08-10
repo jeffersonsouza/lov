@@ -1,2 +1,4 @@
 vendor
 public/app/node_modules
+public/app/www
+*.log

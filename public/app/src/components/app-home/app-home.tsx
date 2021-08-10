@@ -11,7 +11,8 @@ export class AppHome {
   /**
    * @type {string}
    */
-  @State() error: string;
+  @State() error: string[] = [];
+  @State() request = { sending: false };
   @State() image: string;
 
   @State() formControls: LivingOurValues = {
@@ -53,7 +54,21 @@ export class AppHome {
 
   async generateImage(event) {
     event.preventDefault();
-    this.image = await APIService.create(this.formControls);
+    this.error = [...[]];
+
+    if(!this.formControls.value || !this.formControls.subtitle) {
+      this.error = [...this.error, ...['You need to choose the Value and the Principle']];
+      return;
+    }
+
+    try {
+      this.request = {...this.request, sending: true};
+      this.image = await APIService.create(this.formControls);
+      this.request = {...this.request, sending: false};
+    } catch (error) {
+      this.request = {...this.request, sending: false};
+      this.error = [...this.error, ...[error.error || 'Unknown error']];
+    }
   }
 
   resetForm() {
@@ -114,6 +129,7 @@ export class AppHome {
                   <div>
                     <label htmlFor="to">To:</label> <br/>
                     <input type="text" class="input" id="to" placeholder="For whom do you want to write?" required
+                           maxlength="50"
                            value={this.formControls?.to} onInput={(ev: any) =>
                       this.updateFormValue("to", ev.target.value)
                     } />
@@ -123,6 +139,7 @@ export class AppHome {
                   <div>
                     <label htmlFor="from">Author:</label><br/>
                     <input type="text" class="input" id="from" placeholder="Your name..." required
+                           maxlength="25"
                            value={this.formControls?.from} onInput={(ev: any) =>
                       this.updateFormValue("from", ev.target.value)
                     } />
@@ -160,6 +177,12 @@ export class AppHome {
               </ion-row>
               <ion-row>
                 <ion-col>
+                  <div class={this.request?.sending ? 'spinner' : 'hidden'}>
+                    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                  </div>
+                  <div class={this.error.length > 0 ? 'error-box' : 'hidden'}>
+                    { this.error[0] }
+                  </div>
                   <div class="submit-button">
                     <ion-button type="submit" size="large" fill="outline">
                       <ion-icon slot="start" name="image"></ion-icon> {this.image ? 'Re-' : null}Generate Image
