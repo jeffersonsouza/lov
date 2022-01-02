@@ -1,5 +1,6 @@
 <?php
 
+use Laravel\Lumen\Console\Kernel;
 use Nord\Lumen\Cors\CorsMiddleware;
 use Nord\Lumen\Cors\CorsServiceProvider;
 
@@ -48,10 +49,10 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
-// $app->singleton(
-//     Illuminate\Contracts\Console\Kernel::class,
-//     App\Console\Kernel::class
-// );
+ $app->singleton(
+     Illuminate\Contracts\Console\Kernel::class,
+     Kernel::class
+ );
 
 /*
 |--------------------------------------------------------------------------

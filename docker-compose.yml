@@ -1,12 +1,25 @@
 version: '2'
 services:
-    site:
+    lumen:
         image: jeffersonsouza/php:8-nginx
         restart: always
         ports:
             - '80:80'
         volumes:
-            - $PWD/config/nginx/http.d/variables.conf:/etc/nginx/http.d/variables.conf
-            - $PWD/config/php/php-fpm.conf:/etc/php8/php-fpm.d/custom.conf
-            - $PWD/config/php/custom.ini:/etc/php8/conf.d/dev.ini
-            - $PWD:/var/www/html
+            - ./config/nginx/http.d/default.conf:/etc/nginx/http.d/default.conf
+            - ./config/nginx/http.d/variables.conf:/etc/nginx/http.d/variables.conf
+            - ./config/nginx/http.d/php-fpm.conf:/etc/nginx/http.d/php-fpm.conf
+            - ./config/php/php-fpm.conf:/etc/php8/php-fpm.d/custom.conf
+            - ./config/php/custom.ini:/etc/php8/conf.d/dev.ini
+            - ./:/var/www/html/api/
+            - ./public/app/www/:/var/www/html/app/
+    stencil:
+      build:
+        context: ./public/app
+        dockerfile: Dockerfile
+      volumes:
+        - ./public/app:/usr/src/app
+        - /usr/src/app/node_modules
+      ports:
+        - 3333:3333
+      command: npm run start --no-open

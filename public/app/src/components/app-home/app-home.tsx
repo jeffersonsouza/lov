@@ -56,7 +56,7 @@ export class AppHome {
     event.preventDefault();
     this.error = [...[]];
 
-    if(!this.formControls.value || !this.formControls.subtitle) {
+    if(this.formControls.value === null || this.formControls.subtitle === null) {
       this.error = [...this.error, ...['You need to choose the Value and the Principle']];
       return;
     }
@@ -212,6 +212,9 @@ export class AppHome {
               </ion-row>
             </ion-grid>
           </form>
+          <footer>
+            Made with ❤️ by Jefferson Souza
+          </footer>
         </section>
       </ion-content>,
     ];
